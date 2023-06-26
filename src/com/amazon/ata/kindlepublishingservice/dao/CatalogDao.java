@@ -62,9 +62,8 @@ public class CatalogDao {
     }
     public RemoveBookFromCatalogResponse delete(String bookId) {
         CatalogItemVersion book =getLatestVersionOfBook(bookId);
-        if(!book.isInactive()) {
             book.setInactive(true);
-        }
+
         return new RemoveBookFromCatalogResponse();
     }
 }
