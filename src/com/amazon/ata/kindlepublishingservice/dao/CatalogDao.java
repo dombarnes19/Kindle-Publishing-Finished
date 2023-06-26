@@ -61,8 +61,16 @@ public class CatalogDao {
         return results.get(0);
     }
     public RemoveBookFromCatalogResponse delete(String bookId) {
-        CatalogItemVersion book =getLatestVersionOfBook(bookId);
-            book.setInactive(true);
+        Book book = Book.builder().build();
+        book.setBookId(bookId);
+        if(book.getBookId() == null) {
+            throw new BookNotFoundException("No book found with given id");
+        } else {
+            CatalogItemVersion version = getLatestVersionOfBook(bookId);
+            version.setInactive(true);
+            book.setVersion(version.getVersion());
+            dynamoDbMapper.save(book);
+        }
 
         return new RemoveBookFromCatalogResponse();
     }
