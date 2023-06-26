@@ -69,7 +69,7 @@ public class CatalogDao {
             CatalogItemVersion version = getLatestVersionOfBook(bookId);
             version.setInactive(true);
             book.setVersion(version.getVersion());
-            dynamoDbMapper.save(book);
+
         }
 
         return new RemoveBookFromCatalogResponse();
