@@ -1,1 +1,28 @@
-PARTICIPANTS: use this file for creating the remove book from catalog diagram in mastery task 01
+@startuml
+actor Client
+participant ApiGateway
+participant RemoveBookFromCatalogActivity
+participant CatalogDao
+participant DynamoDB
+
+
+Client -> ApiGateway : HTTP request
+ApiGateway -> RemoveBookFromCatalogActivity : execute(RemoveBookFromCatalogRequest)
+RemoveBookFromCatalogActivity -> CatalogDao : removeBookFromCatalog(String bookId)
+CatalogDao -> DynamoDB : remove book with given ID
+alt 500 error
+Client -> ApiGateway : HTTP request
+ApiGateway -> RemoveBookFromCatalogActivity : execute(RemoveBookFromCatalogRequest)
+RemoveBookFromCatalogActivity -> CatalogDao : removeBook(String bookId)
+CatalogDao -> DynamoDB : remove book with given ID
+DynamoDB -> CatalogDao : throw BookNotFoundException
+CatalogDao -> RemoveBookFromCatalogActivity : no book found with id
+RemoveBookFromCatalogActivity -> ApiGateway : no book found with id
+ApiGateway -> Client : 500: no book found with id
+DynamoDB -> CatalogDao : Return confirmation of deletion
+CatalogDao -> RemoveBookFromCatalogActivity : RemoveBookFromCatalogResponse
+RemoveBookFromCatalogActivity -> ApiGateway : Return confirmation of deletion
+ApiGateway -> Client : 200: Book with given id was deleted
+
+
+@enduml

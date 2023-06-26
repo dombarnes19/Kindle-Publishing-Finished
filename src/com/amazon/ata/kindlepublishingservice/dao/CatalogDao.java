@@ -2,6 +2,8 @@ package com.amazon.ata.kindlepublishingservice.dao;
 
 import com.amazon.ata.kindlepublishingservice.dynamodb.models.CatalogItemVersion;
 import com.amazon.ata.kindlepublishingservice.exceptions.BookNotFoundException;
+import com.amazon.ata.kindlepublishingservice.models.Book;
+import com.amazon.ata.kindlepublishingservice.models.response.RemoveBookFromCatalogResponse;
 import com.amazon.ata.kindlepublishingservice.publishing.KindleFormattedBook;
 import com.amazon.ata.kindlepublishingservice.utils.KindlePublishingUtils;
 
@@ -57,5 +59,12 @@ public class CatalogDao {
             return null;
         }
         return results.get(0);
+    }
+    public RemoveBookFromCatalogResponse delete(String bookId) {
+        CatalogItemVersion book =getLatestVersionOfBook(bookId);
+        if(!book.isInactive()) {
+            book.setInactive(true);
+        }
+        return new RemoveBookFromCatalogResponse();
     }
 }
