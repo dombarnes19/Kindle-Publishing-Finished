@@ -12,6 +12,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import javax.inject.Inject;
 
 public class CatalogDao {
@@ -63,12 +64,10 @@ public class CatalogDao {
     public RemoveBookFromCatalogResponse delete(String bookId) {
         Book book = Book.builder().build();
         book.setBookId(bookId);
-        if(book.getBookId() == null) {
+        if(book.getBookId() == null || !Objects.equals(bookId, book.getBookId())) {
             throw new BookNotFoundException("No book found with given id");
         } else {
-            CatalogItemVersion version = getLatestVersionOfBook(bookId);
-            version.setInactive(true);
-            book.setVersion(version.getVersion());
+
 
         }
 
