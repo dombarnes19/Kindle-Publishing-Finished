@@ -66,7 +66,7 @@ public class CatalogDao {
         if (latest == null) {
             throw new BookNotFoundException("noo Book found ");
         } else {
-
+            latest.setInactive(true);
             dynamoDbMapper.save(latest);
             return new Book(bookId, latest.getTitle(), latest.getAuthor(), latest.getText(), latest.getGenre().toString(), latest.getVersion());
         }
