@@ -16,8 +16,7 @@ public class RemoveBookFromCatalogActivity {
         this.catalogDao = catalogDao;
     }
     public RemoveBookFromCatalogResponse execute(RemoveBookFromCatalogRequest removeBookFromCatalogRequest) {
-        if(!removeBookFromCatalogRequest.getBookId().equals(catalogDao.getBookFromCatalog(removeBookFromCatalogRequest.getBookId()))
-                || catalogDao.getBookFromCatalog(removeBookFromCatalogRequest.getBookId()) == null) {
+        if(catalogDao.getBookFromCatalog(removeBookFromCatalogRequest.getBookId()) == null) {
             throw new BookNotFoundException("no book found with given exception");
         }
         else catalogDao.delete(removeBookFromCatalogRequest.getBookId());
