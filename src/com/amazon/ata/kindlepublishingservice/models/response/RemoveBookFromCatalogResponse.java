@@ -20,14 +20,7 @@ public class RemoveBookFromCatalogResponse {
     public void setBook(Book book) {
         this.book = book;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RemoveBookFromCatalogResponse that)) return false;
-        return getBook().equals(that.getBook());
-    }
-
+    
     @Override
     public int hashCode() {
         return Objects.hash(getBook());
