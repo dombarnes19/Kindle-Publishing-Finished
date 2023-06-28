@@ -62,16 +62,15 @@ public class CatalogDao {
         return results.get(0);
     }
     public Book delete(String bookId) {
-        Book book = Book.builder().build();
-        book.setBookId(bookId);
-        if(book.getBookId() == null) {
-            throw new BookNotFoundException("No book found with given id");
+        CatalogItemVersion book = dynamoDbMapper.load(CatalogItemVersion.class, bookId);
+        CatalogItemVersion latest = getLatestVersionOfBook(bookId);
+        if (latest == null) {
+            throw new BookNotFoundException("noo Book found ");
         } else {
-            CatalogItemVersion catalogItemVersion = dynamoDbMapper.load(CatalogItemVersion.class, bookId);
-            catalogItemVersion.setInactive(true);
-            dynamoDbMapper.save(catalogItemVersion);
+            book.setVersion(latest.getVersion());
+            book.setInactive(true);
+            dynamoDbMapper.save(book);
+            return new Book(bookId, book.getTitle(), book.getAuthor(), book.getText(), book.getGenre().toString(), book.getVersion());
         }
-
-        return book;
     }
 }
