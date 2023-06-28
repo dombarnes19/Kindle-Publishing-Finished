@@ -61,7 +61,7 @@ public class CatalogDao {
         }
         return results.get(0);
     }
-    public RemoveBookFromCatalogResponse delete(String bookId) {
+    public Book delete(String bookId) {
         Book book = Book.builder().build();
         book.setBookId(bookId);
         if(book.getBookId() == null) {
@@ -72,6 +72,6 @@ public class CatalogDao {
             dynamoDbMapper.save(catalogItemVersion);
         }
 
-        return new RemoveBookFromCatalogResponse();
+        return book;
     }
 }

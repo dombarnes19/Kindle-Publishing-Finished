@@ -14,7 +14,11 @@ public class RemoveBookFromCatalogActivity {
     RemoveBookFromCatalogActivity(CatalogDao catalogDao) {
         this.catalogDao = catalogDao;
     }
-    public RemoveBookFromCatalogResponse execute(RemoveBookFromCatalogRequest removeBookFromCatalogRequest) {
-        return catalogDao.delete(removeBookFromCatalogRequest.getBookId());
+
+
+    public RemoveBookFromCatalogResponse execute(final RemoveBookFromCatalogRequest removeBookFromCatalogRequest) {
+
+
+        return RemoveBookFromCatalogResponse.builder().build();
     }
 }
