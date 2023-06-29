@@ -71,4 +71,9 @@ public class CatalogDao {
             return new Book(bookId, latest.getTitle(), latest.getAuthor(), latest.getText(), latest.getGenre().toString(), latest.getVersion());
         }
     }
+    public void validateBookExists(String bookId) {
+        if(getLatestVersionOfBook(bookId) == null) {
+            throw new BookNotFoundException("no book found");
+        }
+    }
 }

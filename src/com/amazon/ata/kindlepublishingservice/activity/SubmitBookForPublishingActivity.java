@@ -1,5 +1,6 @@
 package com.amazon.ata.kindlepublishingservice.activity;
 
+import com.amazon.ata.kindlepublishingservice.exceptions.BookNotFoundException;
 import com.amazon.ata.kindlepublishingservice.models.requests.SubmitBookForPublishingRequest;
 import com.amazon.ata.kindlepublishingservice.models.response.SubmitBookForPublishingResponse;
 import com.amazon.ata.kindlepublishingservice.converters.BookPublishRequestConverter;
@@ -24,6 +25,7 @@ import javax.inject.Inject;
 public class SubmitBookForPublishingActivity {
 
     private PublishingStatusDao publishingStatusDao;
+    private CatalogDao catalogDao;
 
     /**
      * Instantiates a new SubmitBookForPublishingActivity object.
@@ -31,8 +33,10 @@ public class SubmitBookForPublishingActivity {
      * @param publishingStatusDao PublishingStatusDao to access the publishing status table.
      */
     @Inject
-    public SubmitBookForPublishingActivity(PublishingStatusDao publishingStatusDao) {
+    public SubmitBookForPublishingActivity(PublishingStatusDao publishingStatusDao, CatalogDao catalogDao) {
         this.publishingStatusDao = publishingStatusDao;
+        this.catalogDao = catalogDao;
+
     }
 
     /**
@@ -46,6 +50,10 @@ public class SubmitBookForPublishingActivity {
      */
     public SubmitBookForPublishingResponse execute(SubmitBookForPublishingRequest request) {
         final BookPublishRequest bookPublishRequest = BookPublishRequestConverter.toBookPublishRequest(request);
+        if(request.getBookId() != null) {
+            catalogDao.validateBookExists(request.getBookId());
+        }
+
 
         // TODO: If there is a book ID in the request, validate it exists in our catalog
         // TODO: Submit the BookPublishRequest for processing
