@@ -1,5 +1,6 @@
 package com.amazon.ata.kindlepublishingservice.activity;
 
+import com.amazon.ata.kindlepublishingservice.dynamodb.models.CatalogItemVersion;
 import com.amazon.ata.recommendationsservice.types.BookGenre;
 import com.amazon.ata.kindlepublishingservice.models.requests.SubmitBookForPublishingRequest;
 import com.amazon.ata.kindlepublishingservice.models.response.SubmitBookForPublishingResponse;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,6 +33,8 @@ public class SubmitBookForPublishingActivityTest {
 
     @Mock
     private PublishingStatusDao publishingStatusDao;
+    @Mock
+    private CatalogDao catalogDao;
 
     @InjectMocks
     private SubmitBookForPublishingActivity activity;
@@ -38,6 +42,7 @@ public class SubmitBookForPublishingActivityTest {
     @BeforeEach
     public void setup() {
         initMocks(this);
+
     }
 
     @Test
@@ -50,12 +55,18 @@ public class SubmitBookForPublishingActivityTest {
                 .withGenre(BookGenre.FANTASY.name())
                 .build();
 
+        CatalogItemVersion catalogItem = new CatalogItemVersion();
+
+        catalogItem.setBookId(request.getBookId());
+
+
         PublishingStatusItem item = new PublishingStatusItem();
         item.setPublishingRecordId("publishing.123");
         // KindlePublishingUtils generates a random publishing status ID for us
         when(publishingStatusDao.setPublishingStatus(anyString(),
                 eq(PublishingRecordStatus.QUEUED),
                 eq(request.getBookId()))).thenReturn(item);
+        when(catalogDao.getBookFromCatalog(request.getBookId())).thenReturn(catalogItem);
 
         // WHEN
         SubmitBookForPublishingResponse response = activity.execute(request);
