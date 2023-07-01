@@ -54,6 +54,7 @@ public class MasteryTaskThreeTests extends IntegrationTestBase {
         assertNotNull(response.getPublishingStatusHistory().get(0), "Expected a single non-null " +
             "status record");
 
+
         PublishingStatusRecord record = response.getPublishingStatusHistory().get(0);
         assertPublishingStatusRecord(record, PublishingRecordStatus.QUEUED, SINGLE_STATUS_BOOK_ID);
     }
