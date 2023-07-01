@@ -78,8 +78,8 @@ public class GetPublishingStatusActivityTest {
 
         //THEN
         assertNotNull(response.getPublishingStatusHistory());
-        assertEquals(response.getPublishingStatusHistory().get(0).getStatus(), PublishingRecordStatus.SUCCESSFUL.toString());
-        assertEquals(response.getPublishingStatusHistory().get(0).getStatusMessage(), Status_Message);
+        assertEquals(response.getPublishingStatusHistory().get(2).getStatus(), PublishingRecordStatus.SUCCESSFUL.toString());
+        assertEquals(response.getPublishingStatusHistory().get(2).getStatusMessage(), Status_Message);
 
     }
 
