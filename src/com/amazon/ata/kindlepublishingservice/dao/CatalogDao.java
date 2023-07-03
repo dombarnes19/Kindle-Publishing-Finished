@@ -76,4 +76,53 @@ public class CatalogDao {
             throw new BookNotFoundException("no book found");
         }
     }
+    public void addBookToCatalog(KindleFormattedBook book) {
+        CatalogItemVersion item = new CatalogItemVersion();
+        item.setBookId(KindlePublishingUtils.generateBookId());
+        item.setVersion(1);
+        item.setTitle(book.getTitle());
+        item.setAuthor(book.getAuthor());
+        item.setText(book.getText());
+        item.setGenre(book.getGenre());
+        dynamoDbMapper.save(item);
+    }
+    //public CatalogItemVersion createOrUpdateBook(KindleFormattedBook book) {
+    //    if(getBookFromCatalog(book.getBookId()) == null) {
+//
+    //        addBookToCatalog(book);
+    //    }
+    //    CatalogItemVersion item = getLatestVersionOfBook(book.getBookId());
+    //        if(getBookFromCatalog(book.getBookId()) != null) {
+//
+    //            if(item == null) {
+    //                throw new BookNotFoundException("couldn't find the given book!");
+    //            }
+    //            item.setVersion(item.getVersion()+1);
+    //            delete(book.getBookId());
+    //            dynamoDbMapper.save(item);
+    //        }
+    //        return item;
+    //    }
+    public CatalogItemVersion createOrUpdateBook(KindleFormattedBook book) throws BookNotFoundException {
+        if (book.getBookId() == null) {
+            String bookId = KindlePublishingUtils.generateBookId();
+            CatalogItemVersion newBook = new CatalogItemVersion();
+            newBook.setBookId(bookId);
+            newBook.setVersion(1);
+            newBook.setTitle(book.getTitle());
+            newBook.setGenre(book.getGenre());
+            newBook.setAuthor(book.getAuthor());
+            newBook.setText(book.getText());
+            dynamoDbMapper.save(newBook);
+            return getLatestVersionOfBook(newBook.getBookId());
+        }
+
+        validateBookExists(book.getBookId());
+        CatalogItemVersion latest = getLatestVersionOfBook(book.getBookId());
+        latest.setVersion(latest.getVersion() + 1);
+        delete(latest.getBookId());
+        dynamoDbMapper.save(latest);
+        return getLatestVersionOfBook(latest.getBookId());
+    }
 }
+
