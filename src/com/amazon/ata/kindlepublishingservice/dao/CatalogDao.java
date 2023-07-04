@@ -86,23 +86,6 @@ public class CatalogDao {
         item.setGenre(book.getGenre());
         dynamoDbMapper.save(item);
     }
-    //public CatalogItemVersion createOrUpdateBook(KindleFormattedBook book) {
-    //    if(getBookFromCatalog(book.getBookId()) == null) {
-//
-    //        addBookToCatalog(book);
-    //    }
-    //    CatalogItemVersion item = getLatestVersionOfBook(book.getBookId());
-    //        if(getBookFromCatalog(book.getBookId()) != null) {
-//
-    //            if(item == null) {
-    //                throw new BookNotFoundException("couldn't find the given book!");
-    //            }
-    //            item.setVersion(item.getVersion()+1);
-    //            delete(book.getBookId());
-    //            dynamoDbMapper.save(item);
-    //        }
-    //        return item;
-    //    }
     public CatalogItemVersion createOrUpdateBook(KindleFormattedBook book) throws BookNotFoundException {
         if (book.getBookId() == null) {
             String bookId = KindlePublishingUtils.generateBookId();
